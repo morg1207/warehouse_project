@@ -1,0 +1,80 @@
+amcl:
+  ros__parameters:
+    use_sim_time: True
+    # Modela el error en la rotacion de la odometría desde la rotación
+    alpha1: 0.1
+    # Modela el error en la rotacion de la odometría desde la traslación
+    alpha2: 0.1
+    # Modela el error en la traslación de la odometría desde la traslación
+    alpha3: 0.1
+    # Modela el error en la traslación de la odometría desde la rotación
+    alpha4: 0.1
+    # Modela el error en los modelos omni
+    alpha5: 0.0
+    
+    
+
+    beam_skip_distance: 0.5
+    # Porcentaje límite de la cantidad de error permitida en el laser 
+    # si esto sucede beam skip distance será activado
+    beam_skip_error_threshold: 0.9
+    # Porcentaje de lecturas de laser mínimo que no deben detectar objetos
+    # si esto sucede beam skip distance será activado
+    beam_skip_threshold: 0.3
+    #hacer un saldo de lecturas
+    do_beamskip: false
+    # Frame base a apartir del cual se calculará la posición
+    base_frame_id: "robot_base_footprint"
+    # Frame global a partir se dará la localización
+    global_frame_id: "map"
+    # Frame id de la odometría
+    odom_frame_id: "robot_odom"
+    # e utiliza para controlar la forma de la distribución 
+    # exponencial que modela las lecturas cortas del sensor en el algoritmo AMCL
+    lambda_short: 0.1
+    laser_likelihood_max_dist: 2.0
+
+    laser_max_range: -1.0
+    laser_min_range: -1.0
+    #modelo de laser a usar /likelihood_field /likelihood_field_prob
+    laser_model_type: "likelihood_field"
+    #Cuántos haces espaciados uniformemente en cada exploración se utilizarán al actualizar el filtro.
+    max_beams: 50
+    #Cantidad de particulas del filtro de particulas max
+    max_particles: 4000
+    #Cantidad de particulas del filtro de particulas min
+    min_particles: 100
+    # Porcentaje del error en cada resampling del filtro de partículas
+    pf_err: 0.2
+    #
+    pf_z: 0.99
+
+    #Provar con un robot real
+    recovery_alpha_fast: 0.0
+    recovery_alpha_slow: 0.0
+
+    #Número de actualizaciones de filtro necesarias antes del remuestreo.
+    resample_interval: 1
+    #Tipo de accionamiento de robot
+    robot_model_type: "differential"
+    # Frecuencia máxima (Hz) a la que almacenar la última pose y covarianza estimadas en el servidor de parámetros, en las variables 
+    save_pose_rate: 0.5
+
+    sigma_hit: 0.2
+    #se publicará la transformación hallada por el amcl
+    tf_broadcast: true
+    #Tiempo con el que se posfecha la transformación que se publica, para indicar que esta transformación es válida en el futuro.
+    transform_tolerance: 1.0
+    #Ángulo mínimo que se debe recorrer para hacer una actualización de filtro
+    update_min_a: 0.2
+    #Distancia mínima que se debe recorrer para hacer una actualización de filtro
+    update_min_d: 0.25
+    #~~~~~~~~~~~~~~~~Parámetros para el modelado del laser~~~~~~~~~
+    #La probabilidad de que la medición del sensor sea correcta
+    z_hit: 0.7
+    #La probabilidad de que la medición del laser alcance su máximo
+    z_max: 0.05
+    # La probabilidad de que la medición del sensor sea aleatoria
+    z_rand: 0.3
+    #La probabilidad de que la medición del laser alcance su mínimo
+    z_short: 0.05
