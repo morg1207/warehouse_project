@@ -1,0 +1,7 @@
+image: /home/morg1207/master_class/checkpoint6/ros2_ws/src/warehouse_project/map_server/maps/map_keepout.pgm
+mode: trinary
+resolution: 0.05
+origin: [-1.01, -4.42, 0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.25
