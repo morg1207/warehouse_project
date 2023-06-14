@@ -34,7 +34,7 @@ ament_target_dependencies(approach_service_server_node rclcpp geometry_msgs sens
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/GoToLoading.srv"
-  DEPENDENCIES builtin_interfaces
+  
 )
 install(TARGETS
    approach_service_server_node

@@ -18,8 +18,10 @@
 #include <iostream>
 #include <memory>
 #include <tf2_ros/transform_listener.h>
+#include <unistd.h>
 #include <vector>
 #define PI 3.141592653589793238462643
+#define THRESHOLD_LEGS 3000
 using attach = attach_shelf::srv::GoToLoading;
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -100,8 +102,9 @@ private:
         while (timer_->is_canceled() == false) {
         }
         geometry_msgs::msg::Twist msg;
-        msg.linear.x = 0.45;
-        rclcpp::Duration duration(2s);
+        msg.linear.x = 0.1;
+        // rclcpp::Duration duration(9s);  simulation
+        rclcpp::Duration duration(5s);
         rclcpp::Time startTime = this->now();
 
         rclcpp::Rate r(20);
@@ -114,6 +117,11 @@ private:
         // up elevator
         std_msgs::msg::Empty msg_empty;
         pub_elevator_up->publish(msg_empty);
+        startTime = this->now();
+        while (this->now() - startTime < duration) {
+          r.sleep();
+        }
+        RCLCPP_INFO(this->get_logger(), "Elevator up");
         index_legs.clear();
         response->complete = true;
         RCLCPP_INFO(this->get_logger(), "Service finished successfully");
@@ -184,6 +192,13 @@ private:
                 msg.linear.x = -0.06;
               } else {
                 msg.linear.x = 0.06;
+              }
+            }
+            if (abs(msg.linear.x) > 0.1) {
+              if (msg.linear.x < 0) {
+                msg.linear.x = -0.1;
+              } else {
+                msg.linear.x = 0.1;
               }
             }
           } else {
@@ -276,9 +291,11 @@ private:
     /*transform_.transform.translation.x = 0;
     transform_.transform.translation.y = 0;*/
     transform_.transform.translation.x =
-        x + ptr_data[0] * std::sin(ptr_data[1]) * std::sin(yaw) +  ptr_data[0] * std::cos(ptr_data[1]) * std::cos(yaw) ;
+        x + ptr_data[0] * std::sin(ptr_data[1]) * std::sin(yaw) +
+        ptr_data[0] * std::cos(ptr_data[1]) * std::cos(yaw);
     transform_.transform.translation.y =
-        y + ptr_data[0] * std::cos(ptr_data[1])* std::sin(yaw)  - ptr_data[0] * std::sin(ptr_data[1])* std::cos(yaw);
+        y + ptr_data[0] * std::cos(ptr_data[1]) * std::sin(yaw) -
+        ptr_data[0] * std::sin(ptr_data[1]) * std::cos(yaw);
 
     transform_.transform.translation.z = z;
 
@@ -333,11 +350,11 @@ private:
     std::vector<float> intensities = laser_data->intensities;
     RCLCPP_INFO(this->get_logger(), "Size [%ld] ", intensities.size());
     for (auto item = intensities.begin(); item != intensities.end(); item++) {
-      if (*item == 0 && flag_up == false && flag_down == false) {
+      if (*item < THRESHOLD_LEGS && flag_up == false && flag_down == false) {
         flag_up = true;
         flag_down = false;
 
-      } else if (flag_up == true && *item != 0) {
+      } else if (flag_up == true && *item > THRESHOLD_LEGS) {
         if (item == intensities.end()) {
           index_legs.push_back(item - intensities.begin());
           count++;
@@ -349,7 +366,7 @@ private:
         flag_down = true;
         flag_up = false;
 
-      } else if (flag_down == true && *item == 0) {
+      } else if (flag_down == true && *item < THRESHOLD_LEGS) {
         count++;
         index_legs.push_back(item - intensities.begin());
         flag_up = true;
@@ -357,7 +374,8 @@ private:
 
       }
 
-      else if (*item != 0 && flag_up == false && flag_down == false) {
+      else if (*item > THRESHOLD_LEGS && flag_up == false &&
+               flag_down == false) {
         flag_up = false;
         flag_down = true;
       }
