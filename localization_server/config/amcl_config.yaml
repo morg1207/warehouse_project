@@ -1,6 +1,6 @@
 amcl:
   ros__parameters:
-    use_sim_time: True
+    use_sim_time: False
     # Modela el error en la rotacion de la odometría desde la rotación
     alpha1: 0.1
     # Modela el error en la rotacion de la odometría desde la traslación
@@ -45,7 +45,7 @@ amcl:
     #Cantidad de particulas del filtro de particulas min
     min_particles: 100
     # Porcentaje del error en cada resampling del filtro de partículas
-    pf_err: 0.2
+    pf_err: 0.05
     #
     pf_z: 0.99
 

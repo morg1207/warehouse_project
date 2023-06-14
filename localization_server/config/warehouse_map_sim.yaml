@@ -1,4 +1,4 @@
-image: /home/morg1207/master_class/checkpoint6/ros2_ws/src/warehouse_project/localization_server/config/warehouse_map_sim.pgm
+image: /home/user/ros2_ws/src/warehouse_project/localization_server/config/warehouse_map_sim_no_edit.pgm
 mode: trinary
 resolution: 0.05
 origin: [-1.01, -4.42, 0]
